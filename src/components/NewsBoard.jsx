@@ -23,20 +23,28 @@ const NewsBoard = ({ category }) => {
   const [dateFilter, setDateFilter] = useState({ type: 'all' });
   const [selectedSources, setSelectedSources] = useState([]);
 
-  const apiKey = import.meta.env.VITE_API_KEY; // Ensure this is in .env
+  // Get backend API URL from environment or use relative path
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || '/api';
 
   const fetchNews = async (pageNum, search) => {
     try {
-      let url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=in&max=6&page=${pageNum}&apikey=${apiKey}`;
+      // Build query parameters
+      const params = new URLSearchParams({
+        category,
+        lang: 'en',
+        country: 'in',
+        max: '6',
+        page: pageNum
+      });
 
-      if (search) url += `&q=${search}`;
-      if (sortBy === "relevancy") url += `&sortBy=relevancy`;
+      if (search) params.append('q', search);
+      if (sortBy === "relevancy") params.append('sortBy', 'relevancy');
 
-      const response = await fetch(url, {
+      // Call backend proxy instead of gnews directly
+      const response = await fetch(`${backendUrl}/news/top-headlines?${params}`, {
         method: "GET",
         headers: {
           "Accept": "application/json",
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         },
       });
 
