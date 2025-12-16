@@ -23,8 +23,8 @@ const NewsBoard = ({ category }) => {
   const [dateFilter, setDateFilter] = useState({ type: 'all' });
   const [selectedSources, setSelectedSources] = useState([]);
 
-  // Get backend API URL from environment or use relative path
-  const backendUrl = import.meta.env.VITE_BACKEND_URL || '/api';
+  // Hardcoded backend URL for production
+  const backendUrl = 'https://newshub-backend-2cil.onrender.com/api';
 
   const fetchNews = async (pageNum, search) => {
     try {
