@@ -48,9 +48,10 @@ app.get('/api/news/top-headlines', async (req, res) => {
     }
 
     if (!response.ok) {
-      return res.status(response.status).json({ 
-        error: `Failed to fetch news: ${response.status} ${response.statusText}` 
-      });
+      const errorBody = await response.text().catch(() => '');
+      const message = `Failed to fetch news: ${response.status} ${response.statusText}`;
+      console.error('Upstream GNews error', { status: response.status, statusText: response.statusText, body: errorBody });
+      return res.status(response.status).json({ error: message, upstream: errorBody });
     }
 
     const data = await response.json();
